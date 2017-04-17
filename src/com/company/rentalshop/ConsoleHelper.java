@@ -15,8 +15,7 @@ public class ConsoleHelper {
 
     public static String readString() {
         try {
-            String s = READER.readLine();
-            return s;
+            return READER.readLine();
         } catch (IOException e) {
             writeMessage("Error reading string.");
         }
@@ -26,8 +25,7 @@ public class ConsoleHelper {
     public static int readInt() {
         try {
             String s = readString();
-            int i = Integer.parseInt(s);
-            return i;
+            return Integer.parseInt(s);
         } catch (NumberFormatException e) {
             writeMessage("Error reading integer.");
         }
