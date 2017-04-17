@@ -1,37 +1,23 @@
 package com.company.rentalshop;
 
-public class Category {
-    private final String name;
+import java.util.HashMap;
+import java.util.Map;
 
-    public Category(String name) {
-        this.name = name;
-    }
+public enum Category {
 
-    public String getName() {
-        return name;
-    }
+    BASKETBALL,
+    FOOTBALL,
+    SKI_N_SNOWBOARD;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+    private static final Map<Category, String> CATEGORY_NAMES = new HashMap<Category, String>() {
+        {
+            put(BASKETBALL, "Basketball");
+            put(FOOTBALL, "Football");
+            put(SKI_N_SNOWBOARD, "Ski & Snowboard");
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+    };
 
-        Category category = (Category) o;
-
-        return name != null ? name.equals(category.name) : category.name == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return name;
+    public static String getName(Category category) {
+        return CATEGORY_NAMES.get(category);
     }
 }

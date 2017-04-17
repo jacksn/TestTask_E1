@@ -67,7 +67,10 @@ public class ConsoleHelper {
             for (Map.Entry<SportEquipment, Integer> entry : availableGoods.entrySet()) {
                 SportEquipment equipment = entry.getKey();
                 writeMessage(String.format(AVAILABLE_GOODS_FORMAT_STRING,
-                        equipment.getCategory(), equipment.getName(), equipment.getPrice(), entry.getValue()));
+                        Category.getName(equipment.getCategory()),
+                        equipment.getName(),
+                        equipment.getPrice(),
+                        entry.getValue()));
             }
             printSeparatorLine();
             readAnyKey();

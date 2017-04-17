@@ -28,7 +28,7 @@ public class Shop {
                     break;
                 }
                 String[] tokens = s.split(";");
-                SportEquipment equipment = new SportEquipment(new Category(tokens[0]), tokens[1], Integer.parseInt(tokens[2]));
+                SportEquipment equipment = new SportEquipment(Category.valueOf(tokens[0]), tokens[1], Integer.parseInt(tokens[2]));
                 goods.put(equipment, Integer.parseInt(tokens[3]));
             }
         } catch (IOException e) {
