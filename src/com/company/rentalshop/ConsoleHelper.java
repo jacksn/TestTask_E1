@@ -3,11 +3,11 @@ package com.company.rentalshop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Map;
+import java.util.List;
 
 public class ConsoleHelper {
     private static final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
-    private static final String AVAILABLE_GOODS_FORMAT_STRING = " %-15s | %-55s | %5s | %9s";
+    private static final String GOODS_FORMAT_STRING = "%5s | %-15s | %-55s | %5s";
 
     public static void writeMessage(String message) {
         System.out.println(message);
@@ -16,7 +16,8 @@ public class ConsoleHelper {
     public static String readString() {
         try {
             return READER.readLine();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             writeMessage("Error reading string.");
         }
         return "";
@@ -26,62 +27,49 @@ public class ConsoleHelper {
         try {
             String s = readString();
             return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             writeMessage("Error reading integer.");
         }
         return -1;
     }
 
-    public static void readAnyKey() {
-        writeMessage("\nPress \"Enter\" to return to main menu.");
-        readString();
-    }
-
-    public static void printGoods(SportEquipment[] units) {
-        if (units.length == 0) {
-            writeMessage("No rented goods available.");
-        } else {
-            writeMessage("Rented goods:");
-            printSeparatorLine();
-            for (int i = 0; i < units.length; i++) {
-                String s = String.format(" %3d | %-55s ", i + 1, units[i].getName());
-                writeMessage(s);
+    public static void printCategories() {
+        for (Category category : Category.values()) {
+            if (category == Category.ROOT_CATEGORY) {
+                continue;
             }
-            readAnyKey();
+            writeMessage(String.format("%4s. %s", category.ordinal(), Category.getName(category)));
         }
     }
 
-    private static void printSeparatorLine() {
-        writeMessage("-----------------------------------------------------------------------------------------------");
-    }
-
-    public static void printAvailableGoods(Map<SportEquipment, Integer> availableGoods) {
-        if (availableGoods.isEmpty()) {
+    public static void printGoods(List<SportEquipment> goods) {
+        if (goods.isEmpty()) {
             writeMessage("No goods available.");
         } else {
-            printSeparatorLine();
-            writeMessage(String.format(AVAILABLE_GOODS_FORMAT_STRING, "Category", "Name", "Price", "Available"));
-
-            printSeparatorLine();
-
-            for (Map.Entry<SportEquipment, Integer> entry : availableGoods.entrySet()) {
-                SportEquipment equipment = entry.getKey();
-                writeMessage(String.format(AVAILABLE_GOODS_FORMAT_STRING,
-                        Category.getName(equipment.getCategory()),
-                        equipment.getName(),
-                        equipment.getPrice(),
-                        entry.getValue()));
+            printHorizontalLine();
+            writeMessage(String.format(GOODS_FORMAT_STRING, "No", "Category", "Name", "Price"));
+            printHorizontalLine();
+            int lineNumber = 1;
+            for (SportEquipment good : goods) {
+                String s = String.format(GOODS_FORMAT_STRING,
+                        lineNumber++, Category.getName(good.getCategory()), good.getName(), good.getPrice());
+                writeMessage(s);
             }
-            printSeparatorLine();
-            readAnyKey();
+            printHorizontalLine();
         }
+    }
+
+    private static void printHorizontalLine() {
+        writeMessage("-----------------------------------------------------------------------------------------------");
     }
 
     public static void printMainMenu() {
         writeMessage("\nChoose action:" +
-                "\n 1. Show available goods" +
-                "\n 2. Search good by name" +
-                "\n 3. Show rented goods" +
-                "\n 4. Exit");
+                "\n 1. Rent from available goods" +
+                "\n 2. Browse categories" +
+                "\n 3. Search goods by name" +
+                "\n 4. Manage rented goods" +
+                "\n 5. Exit");
     }
 }

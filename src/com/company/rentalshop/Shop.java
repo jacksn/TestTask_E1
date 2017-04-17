@@ -1,18 +1,24 @@
 package com.company.rentalshop;
 
+import com.company.rentalshop.exception.NotFoundException;
+import com.company.rentalshop.exception.OutOfStockException;
 import com.company.rentalshop.exception.RentNotAllowedException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Shop {
     private static final int MAX_RENT_COUNT = 3;
 
     private Map<SportEquipment, Integer> goods = new HashMap<>();
     private Map<SportEquipment, Integer> rentedGoods = new HashMap<>();
-
 
     public Shop(Map<SportEquipment, Integer> goods) {
         this.goods = goods;
@@ -28,10 +34,12 @@ public class Shop {
                     break;
                 }
                 String[] tokens = s.split(";");
-                SportEquipment equipment = new SportEquipment(Category.valueOf(tokens[0]), tokens[1], Integer.parseInt(tokens[2]));
+                SportEquipment equipment =
+                        new SportEquipment(Category.valueOf(tokens[0]), tokens[1], Integer.parseInt(tokens[2]));
                 goods.put(equipment, Integer.parseInt(tokens[3]));
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             ConsoleHelper.writeMessage("Error initializing shop from file. File \"" + fileName + "\" was not found.");
             return null;
         }
@@ -39,40 +47,70 @@ public class Shop {
         return new Shop(goods);
     }
 
-    public void rent(SportEquipment equipment) throws RentNotAllowedException {
+    public void rent(SportEquipment equipment) throws RentNotAllowedException, OutOfStockException {
         int count = rentedGoods.values().stream().mapToInt(Integer::intValue).sum();
-        if (count > MAX_RENT_COUNT) {
-            throw new RentNotAllowedException("You not allowed to rent more than " + MAX_RENT_COUNT + " items.");
+        if (count >= MAX_RENT_COUNT) {
+            throw new RentNotAllowedException("You are not allowed to rent more than " + MAX_RENT_COUNT + " items.");
         }
-        rentedGoods.merge(equipment, 1, Integer::sum);
+        int availableCount = goods.get(equipment);
+        if (availableCount > 0) {
+            goods.merge(equipment, -1, Integer::sum);
+            rentedGoods.merge(equipment, 1, Integer::sum);
+        } else {
+            throw new OutOfStockException("\"" + equipment.getName() + "\" is out of stock.");
+        }
     }
 
-    public Map<SportEquipment, Integer> getAvailable() {
-        return Collections.unmodifiableMap(goods);
+    public void returnFromRent(SportEquipment equipment) throws NotFoundException {
+        int rentedCount = rentedGoods.get(equipment);
+        if (rentedCount > 0) {
+            goods.merge(equipment, 1, Integer::sum);
+            if (rentedCount == 1) {
+                rentedGoods.remove(equipment);
+            } else {
+                rentedGoods.merge(equipment, -1, Integer::sum);
+            }
+        } else {
+            throw new NotFoundException("\"" + equipment.getName() + "\" is not rented.");
+        }
+    }
+
+    public List<SportEquipment> getAvailable(Category category) {
+        List<SportEquipment> equipmentList = goods.entrySet().stream()
+                .filter(entry -> entry.getValue() > 0
+                        && (category == Category.ROOT_CATEGORY || entry.getKey().getCategory() == category))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+        Collections.sort(equipmentList);
+        return equipmentList;
+    }
+
+    public List<SportEquipment> findAvailable(String searchString) {
+        searchString = searchString.toLowerCase();
+
+        List<SportEquipment> equipmentList = new LinkedList<>();
+
+        for (SportEquipment equipment : goods.keySet()) {
+            if (equipment.getName().toLowerCase().contains(searchString)) {
+                equipmentList.add(equipment);
+            }
+        }
+
+        Collections.sort(equipmentList);
+        return equipmentList;
     }
 
     public RentUnit getRented() {
-        List<SportEquipment> rentedGoodsList = new LinkedList<>();
+        List<SportEquipment> equipmentList = new LinkedList<>();
 
         for (Map.Entry<SportEquipment, Integer> entry : rentedGoods.entrySet()) {
             for (int i = 0; i < entry.getValue(); i++) {
-                rentedGoodsList.add(entry.getKey());
+                equipmentList.add(entry.getKey());
             }
         }
 
-        return new RentUnit(rentedGoodsList.toArray(new SportEquipment[rentedGoodsList.size()]));
-    }
-
-    public Map<SportEquipment, Integer> findAvailable(String searchString) {
-        searchString = searchString.toLowerCase();
-
-        Map<SportEquipment, Integer> result = new HashMap<>();
-        for (Map.Entry<SportEquipment, Integer> entry : goods.entrySet()) {
-            if (entry.getKey().getName().toLowerCase().contains(searchString)) {
-                result.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        return result;
+        Collections.sort(equipmentList);
+        SportEquipment[] units = equipmentList.toArray(new SportEquipment[equipmentList.size()]);
+        return new RentUnit(units);
     }
 }
