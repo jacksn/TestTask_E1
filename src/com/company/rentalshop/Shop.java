@@ -3,11 +3,8 @@ package com.company.rentalshop;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Shop {
     private static final int MAX_RENT_COUNT = 3;
@@ -28,8 +25,7 @@ public class Shop {
                 SportEquipment equipment = new SportEquipment(new Category(tokens[0]), tokens[1], Integer.parseInt(tokens[2]));
                 goods.put(equipment, Integer.parseInt(tokens[3]));
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             ConsoleHelper.writeMessage("Error initializing shop from file. File \"" + fileName + "\" was not found.");
             return null;
         }
@@ -56,5 +52,12 @@ public class Shop {
         SportEquipment[] rentedGoodsArray = rentedGoodsList.toArray(new SportEquipment[rentedGoodsList.size()]);
 
         return new RentUnit(rentedGoodsArray);
+    }
+
+    public Map<SportEquipment, Integer> findByName(String s) {
+        return goods.entrySet().stream()
+                .filter(sportEquipmentIntegerEntry ->
+                        sportEquipmentIntegerEntry.getKey().getName().matches(String.format(".+[%s].+", s)))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
