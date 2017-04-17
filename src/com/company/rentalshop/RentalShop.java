@@ -65,7 +65,7 @@ public class RentalShop {
         if (s.isEmpty()) {
             return;
         }
-        rentFromAvailable(shop.findAvailable(s));
+        rentFromAvailable(shop.searchAvailable(s));
     }
 
     private static void rentFromAvailable(List<SportEquipment> availableGoods) {
@@ -81,7 +81,7 @@ public class RentalShop {
             try {
                 SportEquipment equipment = availableGoods.get(selectedGood - 1);
                 shop.rent(equipment);
-                ConsoleHelper.writeMessage("You successfully rented \"" + equipment.getName() + "\".");
+                ConsoleHelper.writeMessage("You successfully rented \"" + equipment.getTitle() + "\".");
             }
             catch (Exception e) {
                 ConsoleHelper.writeMessage("Failed to rent item: " + e.getMessage());
@@ -104,8 +104,8 @@ public class RentalShop {
             if (selectedGood > 0 && selectedGood <= rentedGoods.size()) {
                 try {
                     SportEquipment equipment = rentedGoods.get(selectedGood - 1);
-                    shop.returnFromRent(equipment);
-                    ConsoleHelper.writeMessage("You successfully returned \"" + equipment.getName() + "\" to the shop.");
+                    shop.returnToShop(equipment);
+                    ConsoleHelper.writeMessage("You successfully returned \"" + equipment.getTitle() + "\" to the shop.");
                     return;
                 }
                 catch (Exception e) {

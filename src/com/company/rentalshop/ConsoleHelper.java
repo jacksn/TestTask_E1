@@ -53,7 +53,7 @@ public class ConsoleHelper {
             int lineNumber = 1;
             for (SportEquipment good : goods) {
                 String s = String.format(GOODS_FORMAT_STRING,
-                        lineNumber++, Category.getName(good.getCategory()), good.getName(), good.getPrice());
+                        lineNumber++, Category.getName(good.getCategory()), good.getTitle(), good.getPrice());
                 writeMessage(s);
             }
             printHorizontalLine();
@@ -66,10 +66,10 @@ public class ConsoleHelper {
 
     public static void printMainMenu() {
         writeMessage("\nChoose action:" +
-                "\n 1. Rent from available goods" +
-                "\n 2. Browse categories" +
-                "\n 3. Search goods by name" +
-                "\n 4. Manage rented goods" +
+                "\n 1. Rent from all available goods" +
+                "\n 2. Rent from category" +
+                "\n 3. Search goods" +
+                "\n 4. Return rented goods" +
                 "\n 5. Exit");
     }
 }

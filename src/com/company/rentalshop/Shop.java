@@ -57,11 +57,11 @@ public class Shop {
             goods.merge(equipment, -1, Integer::sum);
             rentedGoods.merge(equipment, 1, Integer::sum);
         } else {
-            throw new OutOfStockException("\"" + equipment.getName() + "\" is out of stock.");
+            throw new OutOfStockException("\"" + equipment.getTitle() + "\" is out of stock.");
         }
     }
 
-    public void returnFromRent(SportEquipment equipment) throws NotFoundException {
+    public void returnToShop(SportEquipment equipment) throws NotFoundException {
         int rentedCount = rentedGoods.get(equipment);
         if (rentedCount > 0) {
             goods.merge(equipment, 1, Integer::sum);
@@ -71,7 +71,7 @@ public class Shop {
                 rentedGoods.merge(equipment, -1, Integer::sum);
             }
         } else {
-            throw new NotFoundException("\"" + equipment.getName() + "\" is not rented.");
+            throw new NotFoundException("\"" + equipment.getTitle() + "\" is not rented.");
         }
     }
 
@@ -85,13 +85,13 @@ public class Shop {
         return equipmentList;
     }
 
-    public List<SportEquipment> findAvailable(String searchString) {
+    public List<SportEquipment> searchAvailable(String searchString) {
         searchString = searchString.toLowerCase();
 
         List<SportEquipment> equipmentList = new LinkedList<>();
 
         for (SportEquipment equipment : goods.keySet()) {
-            if (equipment.getName().toLowerCase().contains(searchString)) {
+            if (equipment.getTitle().toLowerCase().contains(searchString)) {
                 equipmentList.add(equipment);
             }
         }

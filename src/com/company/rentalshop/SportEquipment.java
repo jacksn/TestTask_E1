@@ -3,12 +3,12 @@ package com.company.rentalshop;
 public class SportEquipment implements Comparable<SportEquipment> {
 
     private final Category category;
-    private final String name;
+    private final String title;
     private final int price;
 
-    public SportEquipment(Category category, String name, int price) {
+    public SportEquipment(Category category, String title, int price) {
         this.category = category;
-        this.name = name;
+        this.title = title;
         this.price = price;
     }
 
@@ -16,8 +16,8 @@ public class SportEquipment implements Comparable<SportEquipment> {
         return category;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public int getPrice() {
@@ -41,19 +41,19 @@ public class SportEquipment implements Comparable<SportEquipment> {
         if (category != null ? !category.equals(that.category) : that.category != null) {
             return false;
         }
-        return name != null ? name.equals(that.name) : that.name == null;
+        return title != null ? title.equals(that.title) : that.title == null;
     }
 
     @Override
     public int hashCode() {
         int result = category != null ? category.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + price;
         return result;
     }
 
     @Override
     public int compareTo(SportEquipment that) {
-        return this.name.compareTo(that.getName());
+        return this.title.compareTo(that.getTitle());
     }
 }
