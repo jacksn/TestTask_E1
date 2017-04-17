@@ -2,9 +2,10 @@ package com.company.rentalshop;
 
 public enum Action {
     SHOW_MAIN_MENU,
-    SHOW_AVAILABLE,
+    RENT_FROM_ALL_AVAILABLE,
+    RENT_FROM_CATEGORY,
     SEARCH_BY_NAME,
-    SHOW_RENTED,
+    RETURN_FROM_RENT,
     EXIT;
 
     public static Action getByOrdinal(int i) {
