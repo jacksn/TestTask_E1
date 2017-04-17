@@ -1,16 +1,22 @@
 package com.company.rentalshop;
 
+import com.company.rentalshop.exception.RentNotAllowedException;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Shop {
     private static final int MAX_RENT_COUNT = 3;
 
     private Map<SportEquipment, Integer> goods = new HashMap<>();
     private Map<SportEquipment, Integer> rentedGoods = new HashMap<>();
+
+
+    public Shop(Map<SportEquipment, Integer> goods) {
+        this.goods = goods;
+    }
 
     public static Shop getShop(String fileName) {
         Map<SportEquipment, Integer> goods = new HashMap<>();
@@ -30,17 +36,22 @@ public class Shop {
             return null;
         }
 
-        Shop shop = new Shop();
-        shop.goods = goods;
-
-        return shop;
+        return new Shop(goods);
     }
 
-    public Map<SportEquipment, Integer> getAvailableGoods() {
+    public void rent(SportEquipment equipment) throws RentNotAllowedException {
+        int count = rentedGoods.values().stream().mapToInt(Integer::intValue).sum();
+        if (count > MAX_RENT_COUNT) {
+            throw new RentNotAllowedException("You not allowed to rent more than " + MAX_RENT_COUNT + " items.");
+        }
+        rentedGoods.merge(equipment, 1, Integer::sum);
+    }
+
+    public Map<SportEquipment, Integer> getAvailable() {
         return Collections.unmodifiableMap(goods);
     }
 
-    public RentUnit getRentedGoods() {
+    public RentUnit getRented() {
         List<SportEquipment> rentedGoodsList = new LinkedList<>();
 
         for (Map.Entry<SportEquipment, Integer> entry : rentedGoods.entrySet()) {
@@ -49,15 +60,19 @@ public class Shop {
             }
         }
 
-        SportEquipment[] rentedGoodsArray = rentedGoodsList.toArray(new SportEquipment[rentedGoodsList.size()]);
-
-        return new RentUnit(rentedGoodsArray);
+        return new RentUnit(rentedGoodsList.toArray(new SportEquipment[rentedGoodsList.size()]));
     }
 
-    public Map<SportEquipment, Integer> findByName(String s) {
-        return goods.entrySet().stream()
-                .filter(sportEquipmentIntegerEntry ->
-                        sportEquipmentIntegerEntry.getKey().getName().matches(String.format(".+[%s].+", s)))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    public Map<SportEquipment, Integer> findAvailable(String searchString) {
+        searchString = searchString.toLowerCase();
+
+        Map<SportEquipment, Integer> result = new HashMap<>();
+        for (Map.Entry<SportEquipment, Integer> entry : goods.entrySet()) {
+            if (entry.getKey().getName().toLowerCase().contains(searchString)) {
+                result.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return result;
     }
 }

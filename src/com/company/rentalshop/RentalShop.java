@@ -36,7 +36,7 @@ public class RentalShop {
     }
 
     private static void printAvailableGoods() {
-        ConsoleHelper.printAvailableGoods(shop.getAvailableGoods());
+        ConsoleHelper.printAvailableGoods(shop.getAvailable());
     }
 
     private static void searchGoodsByName() {
@@ -44,11 +44,11 @@ public class RentalShop {
         String s = ConsoleHelper.readString();
         if (s.isEmpty()) return;
 
-        ConsoleHelper.printAvailableGoods(shop.findGoods(s));
+        ConsoleHelper.printAvailableGoods(shop.findAvailable(s));
     }
 
     private static void printRentedGoods() {
-        ConsoleHelper.printGoods(shop.getRentedGoods().getUnits());
+        ConsoleHelper.printGoods(shop.getRented().getUnits());
     }
 
     private static void showMainMenu() {
