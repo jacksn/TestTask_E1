@@ -9,8 +9,8 @@ public class RentalShop {
     private static Shop shop;
 
     public static void main(String[] args) {
-        ConsoleHelper.writeMessage("Welcome to sport equipment rental shop.");
         shop = Shop.getShop(DATA_FILE);
+        ConsoleHelper.writeMessage("Welcome to sport equipment rental shop.");
         if (shop != null) {
             Action action = Action.SHOW_MAIN_MENU;
             do {
@@ -94,7 +94,7 @@ public class RentalShop {
         do {
             List<SportEquipment> rentedGoods = Arrays.asList(shop.getRented().getUnits());
             if (rentedGoods.isEmpty()) {
-                ConsoleHelper.writeMessage("No goods in rent.");
+                ConsoleHelper.writeMessage("No rented goods.");
                 return;
             }
             ConsoleHelper.writeMessage("Rented goods:");
