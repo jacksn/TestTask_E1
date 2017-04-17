@@ -1,6 +1,6 @@
 package com.company.rentalshop;
 
-public class SportEquipment {
+public class SportEquipment implements Comparable<SportEquipment> {
 
     private final Category category;
     private final String name;
@@ -50,5 +50,10 @@ public class SportEquipment {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + price;
         return result;
+    }
+
+    @Override
+    public int compareTo(SportEquipment that) {
+        return this.name.compareTo(that.getName());
     }
 }
