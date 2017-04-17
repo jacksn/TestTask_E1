@@ -47,12 +47,15 @@ public class Shop {
         return new Shop(goods);
     }
 
-    public void rent(SportEquipment equipment) throws RentNotAllowedException, OutOfStockException {
+    public void rent(SportEquipment equipment) throws RentNotAllowedException, OutOfStockException, NotFoundException {
         int count = rentedGoods.values().stream().mapToInt(Integer::intValue).sum();
         if (count >= MAX_RENT_COUNT) {
             throw new RentNotAllowedException("You are not allowed to rent more than " + MAX_RENT_COUNT + " items.");
         }
-        int availableCount = goods.get(equipment);
+        Integer availableCount = goods.get(equipment);
+        if (availableCount == null) {
+            throw new NotFoundException("\"" + equipment.getTitle() + "\" is not available in the shop.");
+        }
         if (availableCount > 0) {
             goods.merge(equipment, -1, Integer::sum);
             rentedGoods.merge(equipment, 1, Integer::sum);
@@ -62,8 +65,8 @@ public class Shop {
     }
 
     public void returnToShop(SportEquipment equipment) throws NotFoundException {
-        int rentedCount = rentedGoods.get(equipment);
-        if (rentedCount > 0) {
+        Integer rentedCount = rentedGoods.get(equipment);
+        if (rentedCount != null && rentedCount > 0) {
             goods.merge(equipment, 1, Integer::sum);
             if (rentedCount == 1) {
                 rentedGoods.remove(equipment);
