@@ -24,27 +24,8 @@ public class Shop {
         this.goods = goods;
     }
 
-    public static Shop getShop(String fileName) {
-        Map<SportEquipment, Integer> goods = new HashMap<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            while (true) {
-                String s = reader.readLine();
-                if (s == null) {
-                    break;
-                }
-                String[] tokens = s.split(";");
-                SportEquipment equipment =
-                        new SportEquipment(Category.valueOf(tokens[0]), tokens[1], Integer.parseInt(tokens[2]));
-                goods.put(equipment, Integer.parseInt(tokens[3]));
-            }
-        }
-        catch (IOException e) {
-            ConsoleHelper.writeMessage("Error initializing shop from file. File \"" + fileName + "\" was not found.");
-            return null;
-        }
-
-        return new Shop(goods);
+    public Map<SportEquipment, Integer> getGoods() {
+        return Collections.unmodifiableMap(goods);
     }
 
     public void rent(SportEquipment equipment) throws RentNotAllowedException, OutOfStockException, NotFoundException {
@@ -115,5 +96,28 @@ public class Shop {
         Collections.sort(equipmentList);
         SportEquipment[] units = equipmentList.toArray(new SportEquipment[equipmentList.size()]);
         return new RentUnit(units);
+    }
+
+    public static Shop getShop(String fileName) {
+        Map<SportEquipment, Integer> goods = new HashMap<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            while (true) {
+                String s = reader.readLine();
+                if (s == null) {
+                    break;
+                }
+                String[] tokens = s.split(";");
+                SportEquipment equipment =
+                        new SportEquipment(Category.valueOf(tokens[0]), tokens[1], Integer.parseInt(tokens[2]));
+                goods.put(equipment, Integer.parseInt(tokens[3]));
+            }
+        }
+        catch (IOException e) {
+            ConsoleHelper.writeMessage("Error initializing shop from file. File \"" + fileName + "\" was not found.");
+            return null;
+        }
+
+        return new Shop(goods);
     }
 }
