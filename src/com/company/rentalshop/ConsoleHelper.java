@@ -68,13 +68,16 @@ public class ConsoleHelper {
             int lineNumber = 1;
             for (Map.Entry<SportEquipment, Integer> entry : goods.entrySet()) {
                 SportEquipment equipment = entry.getKey();
-                String s = String.format(GOODS_WITH_COUNT_FORMAT_STRING,
-                        lineNumber++,
-                        Category.getName(equipment.getCategory()),
-                        equipment.getTitle(),
-                        equipment.getPrice(),
-                        entry.getValue());
-                writeMessage(s);
+                Integer count = entry.getValue();
+                if (count > 0) {
+                    String s = String.format(GOODS_WITH_COUNT_FORMAT_STRING,
+                            lineNumber++,
+                            Category.getName(equipment.getCategory()),
+                            equipment.getTitle(),
+                            equipment.getPrice(),
+                            count);
+                    writeMessage(s);
+                }
             }
             printHorizontalLine();
         }
