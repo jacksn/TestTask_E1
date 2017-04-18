@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class Shop {
     private static final int MAX_RENT_COUNT = 3;
 
-    private Map<SportEquipment, Integer> goods = new HashMap<>();
+    private Map<SportEquipment, Integer> goods;
     private Map<SportEquipment, Integer> rentedGoods = new HashMap<>();
 
     public Shop(Map<SportEquipment, Integer> goods) {
