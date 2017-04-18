@@ -2,6 +2,8 @@ package com.company.rentalshop;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class RentalShop {
     private static final String DATA_FILE = "test_data.txt";
@@ -32,6 +34,10 @@ public class RentalShop {
                         returnFromRent();
                         action = Action.SHOW_MAIN_MENU;
                         break;
+                    case SHOW_REPORT:
+                        showReport();
+                        action = Action.SHOW_MAIN_MENU;
+                        break;
                     case SHOW_MAIN_MENU:
                         showMainMenu();
                         try {
@@ -46,6 +52,26 @@ public class RentalShop {
             } while (action != Action.EXIT);
         }
         ConsoleHelper.writeMessage("Good bye!");
+    }
+
+    private static void showReport() {
+        ConsoleHelper.writeMessage("Full report:");
+        ConsoleHelper.writeMessage("\nAvailable goods:");
+        Map<SportEquipment, Integer> available = new TreeMap<>(shop.getGoods());
+        ConsoleHelper.printGoodsWithCount(available);
+        ConsoleHelper.writeMessage("\nRented goods:");
+        Map<SportEquipment, Integer> rented = convertRentUnitToMap(shop.getRented());
+        ConsoleHelper.printGoodsWithCount(rented);
+        ConsoleHelper.writeMessage("\nPress Enter to return to main menu.");
+        ConsoleHelper.readString();
+    }
+
+    private static Map<SportEquipment, Integer> convertRentUnitToMap(RentUnit rentUnit) {
+        Map<SportEquipment, Integer> result = new TreeMap<>();
+        for (SportEquipment equipment : rentUnit.getUnits()) {
+            result.merge(equipment, 1, Integer::sum);
+        }
+        return result;
     }
 
     private static void rentFromAllAvailableGoods() {
