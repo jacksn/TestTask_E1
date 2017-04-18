@@ -9,7 +9,7 @@ import java.util.Map;
 public class ConsoleHelper {
     private static final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
     private static final String GOODS_FORMAT_STRING = "%5s | %-15s | %-55s | %5s";
-    private static final String GOODS_WITH_COUNT_FORMAT_STRING = "%5s | %-15s | %-55s | %5s | %5s";
+    private static final String GOODS_WITH_COUNT_FORMAT_STRING = "%4s | %-15s | %-50s | %5s | %5s";
 
     public static void writeMessage(String message) {
         System.out.println(message);
@@ -87,7 +87,7 @@ public class ConsoleHelper {
 
 
     private static void printHorizontalLine() {
-        writeMessage("-----------------------------------------------------------------------------------------------");
+        writeMessage("--------------------------------------------------------------------------------------------");
     }
 
     public static void printMainMenu() {
