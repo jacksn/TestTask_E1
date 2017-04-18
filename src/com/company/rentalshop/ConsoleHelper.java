@@ -91,11 +91,10 @@ public class ConsoleHelper {
     }
 
     public static void printMainMenu() {
-        writeMessage("\nChoose action:" +
-                "\n 1. Rent from all available goods" +
-                "\n 2. Rent from category" +
-                "\n 3. Search goods" +
-                "\n 4. Return rented goods" +
-                "\n 5. Exit");
+        writeMessage("\nChoose action:");
+        Action[] actions = Action.values();
+        for (int i = 1; i < actions.length; i++) {
+            writeMessage(String.format("%4s. %s", i, Action.getName(actions[i])));
+        }
     }
 }
