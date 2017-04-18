@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 
 public class ConsoleHelper {
     private static final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
     private static final String GOODS_FORMAT_STRING = "%5s | %-15s | %-55s | %5s";
+    private static final String GOODS_WITH_COUNT_FORMAT_STRING = "%5s | %-15s | %-55s | %5s | %5s";
 
     public static void writeMessage(String message) {
         System.out.println(message);
@@ -47,9 +49,7 @@ public class ConsoleHelper {
         if (goods.isEmpty()) {
             writeMessage("No goods available.");
         } else {
-            printHorizontalLine();
-            writeMessage(String.format(GOODS_FORMAT_STRING, "No", "Category", "Name", "Price"));
-            printHorizontalLine();
+            printTableHeader(GOODS_FORMAT_STRING, "No", "Category", "Name", "Price");
             int lineNumber = 1;
             for (SportEquipment good : goods) {
                 String s = String.format(GOODS_FORMAT_STRING,
@@ -59,6 +59,32 @@ public class ConsoleHelper {
             printHorizontalLine();
         }
     }
+
+    public static void printGoodsWithCount(Map<SportEquipment, Integer> goods) {
+        if (goods.isEmpty()) {
+            writeMessage("No goods available.");
+        } else {
+            printTableHeader(GOODS_WITH_COUNT_FORMAT_STRING, "No", "Category", "Name", "Price", "Count");
+            int lineNumber = 1;
+            for (Map.Entry<SportEquipment, Integer> entry : goods.entrySet()) {
+                SportEquipment equipment = entry.getKey();
+                String s = String.format(GOODS_WITH_COUNT_FORMAT_STRING,
+                        lineNumber++,
+                        Category.getName(equipment.getCategory()),
+                        equipment.getTitle(),
+                        equipment.getPrice(),
+                        entry.getValue());
+                writeMessage(s);
+            }
+            printHorizontalLine();
+        }
+    }
+    private static void printTableHeader(final String formatString, String... columnNames) {
+        printHorizontalLine();
+        writeMessage(String.format(formatString, columnNames));
+        printHorizontalLine();
+    }
+
 
     private static void printHorizontalLine() {
         writeMessage("-----------------------------------------------------------------------------------------------");
