@@ -1,8 +1,12 @@
 package com.company.rentalshop;
 
+import com.company.rentalshop.domain.Category;
+import com.company.rentalshop.domain.RentUnit;
+import com.company.rentalshop.domain.SportEquipment;
 import com.company.rentalshop.exception.NotFoundException;
 import com.company.rentalshop.exception.OutOfStockException;
 import com.company.rentalshop.exception.RentNotAllowedException;
+import com.company.rentalshop.util.ConsoleHelper;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

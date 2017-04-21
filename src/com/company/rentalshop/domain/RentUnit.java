@@ -1,4 +1,4 @@
-package com.company.rentalshop;
+package com.company.rentalshop.domain;
 
 public class RentUnit {
 

@@ -1,4 +1,4 @@
-package com.company.rentalshop;
+package com.company.rentalshop.domain;
 
 import java.util.HashMap;
 import java.util.Map;

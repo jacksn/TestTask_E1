@@ -1,5 +1,10 @@
 package com.company.rentalshop;
 
+import com.company.rentalshop.domain.Category;
+import com.company.rentalshop.domain.RentUnit;
+import com.company.rentalshop.domain.SportEquipment;
+import com.company.rentalshop.util.ConsoleHelper;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

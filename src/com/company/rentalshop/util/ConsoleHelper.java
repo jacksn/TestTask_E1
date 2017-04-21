@@ -1,4 +1,8 @@
-package com.company.rentalshop;
+package com.company.rentalshop.util;
+
+import com.company.rentalshop.Action;
+import com.company.rentalshop.domain.Category;
+import com.company.rentalshop.domain.SportEquipment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
